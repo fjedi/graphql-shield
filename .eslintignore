@@ -4,4 +4,5 @@ dist
 coverage
 jest.config.js
 lib
+test
 .eslintrc.js

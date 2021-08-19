@@ -15,7 +15,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2017,
     sourceType: 'module',
-    jsx: true,
+    jsx: false,
     project: 'tsconfig-cjs.json',
   },
   rules: {
