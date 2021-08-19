@@ -8,7 +8,8 @@
     "access rules",
     "access policy"
   ],
-  "version": "0.0.3",
+  "version": "0.0.4",
+  "private": false,
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
   "files": [
