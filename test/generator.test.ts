@@ -1,7 +1,7 @@
-import { makeExecutableSchema } from 'graphql-tools'
-import { applyMiddleware } from 'graphql-middleware'
-import { shield, rule } from '../src'
-import { graphql } from 'graphql'
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import { applyMiddleware } from 'graphql-middleware';
+import { shield, rule } from '../src';
+import { graphql } from 'graphql';
 
 describe('generates correct middleware', () => {
   test('correctly applies schema rule to schema', async () => {
@@ -15,7 +15,7 @@ describe('generates correct middleware', () => {
       type Type {
         a: String
       }
-    `
+    `;
 
     const resolvers = {
       Query: {
@@ -25,16 +25,16 @@ describe('generates correct middleware', () => {
       Type: {
         a: () => 'a',
       },
-    }
+    };
 
-    const schema = makeExecutableSchema({ typeDefs, resolvers })
+    const schema = makeExecutableSchema({ typeDefs, resolvers });
 
     /* Permissions */
 
-    const allowMock = jest.fn().mockResolvedValue(true)
-    const permissions = shield(rule({ cache: 'no_cache' })(allowMock))
+    const allowMock = jest.fn().mockResolvedValue(true);
+    const permissions = shield(rule({ cache: 'no_cache' })(allowMock));
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = applyMiddleware(schema, permissions);
 
     /* Execution */
     const query = `
@@ -44,9 +44,9 @@ describe('generates correct middleware', () => {
           a
         }
       }
-    `
+    `;
 
-    const res = await graphql(schemaWithPermissions, query)
+    const res = await graphql(schemaWithPermissions, query);
 
     /* Tests */
 
@@ -57,9 +57,9 @@ describe('generates correct middleware', () => {
           a: 'a',
         },
       },
-    })
-    expect(allowMock).toBeCalledTimes(3)
-  })
+    });
+    expect(allowMock).toBeCalledTimes(3);
+  });
 
   test('correctly applies type rule to type', async () => {
     /* Schema */
@@ -72,7 +72,7 @@ describe('generates correct middleware', () => {
       type Type {
         a: String
       }
-    `
+    `;
 
     const resolvers = {
       Query: {
@@ -82,18 +82,18 @@ describe('generates correct middleware', () => {
       Type: {
         a: () => 'a',
       },
-    }
+    };
 
-    const schema = makeExecutableSchema({ typeDefs, resolvers })
+    const schema = makeExecutableSchema({ typeDefs, resolvers });
 
     /* Permissions */
 
-    const allowMock = jest.fn().mockResolvedValue(true)
+    const allowMock = jest.fn().mockResolvedValue(true);
     const permissions = shield({
       Query: rule({ cache: 'no_cache' })(allowMock),
-    })
+    });
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = applyMiddleware(schema, permissions);
 
     /* Execution */
     const query = `
@@ -103,9 +103,9 @@ describe('generates correct middleware', () => {
           a
         }
       }
-    `
+    `;
 
-    const res = await graphql(schemaWithPermissions, query)
+    const res = await graphql(schemaWithPermissions, query);
 
     /* Tests */
 
@@ -116,9 +116,9 @@ describe('generates correct middleware', () => {
           a: 'a',
         },
       },
-    })
-    expect(allowMock).toBeCalledTimes(2)
-  })
+    });
+    expect(allowMock).toBeCalledTimes(2);
+  });
 
   test('correctly applies field rule to field', async () => {
     /* Schema */
@@ -131,7 +131,7 @@ describe('generates correct middleware', () => {
       type Type {
         a: String
       }
-    `
+    `;
 
     const resolvers = {
       Query: {
@@ -141,18 +141,18 @@ describe('generates correct middleware', () => {
       Type: {
         a: () => 'a',
       },
-    }
+    };
 
-    const schema = makeExecutableSchema({ typeDefs, resolvers })
+    const schema = makeExecutableSchema({ typeDefs, resolvers });
 
     /* Permissions */
 
-    const allowMock = jest.fn().mockResolvedValue(true)
+    const allowMock = jest.fn().mockResolvedValue(true);
     const permissions = shield({
       Query: { a: rule({ cache: 'no_cache' })(allowMock) },
-    })
+    });
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = applyMiddleware(schema, permissions);
 
     /* Execution */
     const query = `
@@ -162,9 +162,9 @@ describe('generates correct middleware', () => {
           a
         }
       }
-    `
+    `;
 
-    const res = await graphql(schemaWithPermissions, query)
+    const res = await graphql(schemaWithPermissions, query);
 
     /* Tests */
 
@@ -175,9 +175,9 @@ describe('generates correct middleware', () => {
           a: 'a',
         },
       },
-    })
-    expect(allowMock).toBeCalledTimes(1)
-  })
+    });
+    expect(allowMock).toBeCalledTimes(1);
+  });
 
   test('correctly applies wildcard rule to type', async () => {
     /* Schema */
@@ -192,7 +192,7 @@ describe('generates correct middleware', () => {
         field1: String
         field2: String
       }
-    `
+    `;
 
     const resolvers = {
       Query: {
@@ -203,15 +203,15 @@ describe('generates correct middleware', () => {
           field2: 'field2',
         }),
       },
-    }
+    };
 
-    const schema = makeExecutableSchema({ typeDefs, resolvers })
+    const schema = makeExecutableSchema({ typeDefs, resolvers });
 
     /* Permissions */
 
-    const allowMock = jest.fn().mockResolvedValue(true)
-    const defaultQueryMock = jest.fn().mockResolvedValue(true)
-    const defaultTypeMock = jest.fn().mockResolvedValue(true)
+    const allowMock = jest.fn().mockResolvedValue(true);
+    const defaultQueryMock = jest.fn().mockResolvedValue(true);
+    const defaultTypeMock = jest.fn().mockResolvedValue(true);
 
     const permissions = shield({
       Query: {
@@ -222,9 +222,9 @@ describe('generates correct middleware', () => {
       Type: {
         '*': rule({ cache: 'no_cache' })(defaultTypeMock),
       },
-    })
+    });
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = applyMiddleware(schema, permissions);
 
     /* Execution */
     const query = `
@@ -236,9 +236,9 @@ describe('generates correct middleware', () => {
           field2
         }
       }
-    `
+    `;
 
-    const res = await graphql(schemaWithPermissions, query)
+    const res = await graphql(schemaWithPermissions, query);
 
     /* Tests */
 
@@ -251,9 +251,9 @@ describe('generates correct middleware', () => {
           field2: 'field2',
         },
       },
-    })
-    expect(allowMock).toBeCalledTimes(1)
-    expect(defaultQueryMock).toBeCalledTimes(1)
-    expect(defaultTypeMock).toBeCalledTimes(2)
-  })
-})
+    });
+    expect(allowMock).toBeCalledTimes(1);
+    expect(defaultQueryMock).toBeCalledTimes(1);
+    expect(defaultTypeMock).toBeCalledTimes(2);
+  });
+});

@@ -1,7 +1,7 @@
-import { graphql } from 'graphql'
-import { applyMiddleware } from 'graphql-middleware'
-import { makeExecutableSchema } from 'graphql-tools'
-import { shield, inputRule } from '../src'
+import { graphql } from 'graphql';
+import { applyMiddleware } from 'graphql-middleware';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import { shield, inputRule } from '../src';
 
 describe('input rule', () => {
   test('schema validation works as expected', async () => {
@@ -13,7 +13,7 @@ describe('input rule', () => {
       type Mutation {
         login(email: String!): String
       }
-    `
+    `;
 
     const resolvers = {
       Query: {
@@ -22,9 +22,9 @@ describe('input rule', () => {
       Mutation: {
         login: () => 'pass',
       },
-    }
+    };
 
-    const schema = makeExecutableSchema({ typeDefs, resolvers })
+    const schema = makeExecutableSchema({ typeDefs, resolvers });
 
     // Permissions
     const permissions = shield({
@@ -35,9 +35,9 @@ describe('input rule', () => {
           }),
         ),
       },
-    })
+    });
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = applyMiddleware(schema, permissions);
 
     /* Execution */
 
@@ -46,15 +46,15 @@ describe('input rule', () => {
         success: login(email: "shield@graphql.com")
         failure: login(email: "notemail")
       }
-    `
-    const res = await graphql(schemaWithPermissions, query)
+    `;
+    const res = await graphql(schemaWithPermissions, query);
 
     /* Tests */
 
     expect(res.data).toEqual({
       success: 'pass',
       failure: null,
-    })
-    expect(res.errors).toMatchSnapshot()
-  })
-})
+    });
+    expect(res.errors).toMatchSnapshot();
+  });
+});

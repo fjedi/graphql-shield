@@ -19,6 +19,7 @@
     "yup": "^0.32.0"
   },
   "devDependencies": {
+    "@graphql-tools/schema": "8.1.2",
     "@types/expect": "24.3.0",
     "@types/jest": "27.0.1",
     "@types/node": "14.17.10",
@@ -73,6 +74,7 @@
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "prettier": "prettier --write ."
   }
 }

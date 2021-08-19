@@ -1,8 +1,8 @@
-import { graphql } from 'graphql'
-import { applyMiddleware } from 'graphql-middleware'
-import { makeExecutableSchema } from 'graphql-tools'
-import { shield, rule } from '../src/index'
-import { IHashFunction } from '../src/types'
+import { graphql } from 'graphql';
+import { applyMiddleware } from 'graphql-middleware';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import { shield, rule } from '../src/index';
+import { IHashFunction } from '../src/types';
 
 describe('caching:', () => {
   test('Strict cache - Rule is called multiple times, based on different parent.', async () => {
@@ -12,34 +12,30 @@ describe('caching:', () => {
       type Query {
         test: [Test!]!
       }
-  
+
       type Test {
         value: String!
       }
-    `
+    `;
     const resolvers = {
       Query: {
-        test: () => [
-          { value: 'pass-A' },
-          { value: 'pass-A' },
-          { value: 'pass-B' },
-        ],
+        test: () => [{ value: 'pass-A' }, { value: 'pass-A' }, { value: 'pass-B' }],
       },
-    }
+    };
 
     const schema = makeExecutableSchema({
       typeDefs,
       resolvers,
-    })
+    });
 
     /* Permissions */
 
-    const allowMock = jest.fn().mockResolvedValue(true)
+    const allowMock = jest.fn().mockResolvedValue(true);
     const permissions = shield({
       Test: rule({ cache: 'strict' })(allowMock),
-    })
+    });
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = applyMiddleware(schema, permissions);
 
     /* Execution */
 
@@ -49,16 +45,16 @@ describe('caching:', () => {
           value
         }
       }
-    `
-    const res = await graphql(schemaWithPermissions, query, undefined, {})
+    `;
+    const res = await graphql(schemaWithPermissions, query, undefined, {});
 
     expect(res).toEqual({
       data: {
         test: [{ value: 'pass-A' }, { value: 'pass-A' }, { value: 'pass-B' }],
       },
-    })
-    expect(allowMock).toBeCalledTimes(2)
-  })
+    });
+    expect(allowMock).toBeCalledTimes(2);
+  });
 
   test('Strict cache - Rule is called multiple times, based on different arguments.', async () => {
     /* Schema */
@@ -71,7 +67,7 @@ describe('caching:', () => {
         d(arg: String): String!
         e(arg: String): String!
       }
-    `
+    `;
     const resolvers = {
       Query: {
         a: () => 'a',
@@ -80,22 +76,22 @@ describe('caching:', () => {
         d: () => 'd',
         e: () => 'e',
       },
-    }
+    };
 
     const schema = makeExecutableSchema({
       typeDefs,
       resolvers,
-    })
+    });
 
     /* Tests */
 
-    const allowMock = jest.fn().mockResolvedValue(true)
+    const allowMock = jest.fn().mockResolvedValue(true);
 
     const permissions = shield({
       Query: rule({ cache: 'strict' })(allowMock),
-    })
+    });
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = applyMiddleware(schema, permissions);
 
     /* Execution */
 
@@ -108,8 +104,8 @@ describe('caching:', () => {
         e
         f: c(arg: "foo")
       }
-    `
-    const res = await graphql(schemaWithPermissions, query, undefined, {})
+    `;
+    const res = await graphql(schemaWithPermissions, query, undefined, {});
 
     /* Tests */
 
@@ -122,9 +118,9 @@ describe('caching:', () => {
         e: 'e',
         f: 'c',
       },
-    })
-    expect(allowMock).toBeCalledTimes(3)
-  })
+    });
+    expect(allowMock).toBeCalledTimes(3);
+  });
 
   test('Contextual Cache - rules get executed only once if reused.', async () => {
     /* Schema */
@@ -137,7 +133,7 @@ describe('caching:', () => {
         d(arg: String): String!
         e(arg: String): String!
       }
-    `
+    `;
     const resolvers = {
       Query: {
         a: () => 'a',
@@ -146,20 +142,20 @@ describe('caching:', () => {
         d: () => 'd',
         e: () => 'e',
       },
-    }
+    };
 
     const schema = makeExecutableSchema({
       typeDefs,
       resolvers,
-    })
+    });
 
     /* Permissions */
 
-    const ruleOneMock = jest.fn().mockResolvedValue(true)
-    const ruleOne = rule({ cache: 'contextual' })(ruleOneMock)
+    const ruleOneMock = jest.fn().mockResolvedValue(true);
+    const ruleOne = rule({ cache: 'contextual' })(ruleOneMock);
 
-    const ruleTwoMock = jest.fn().mockResolvedValue(true)
-    const ruleTwo = rule({ cache: 'contextual' })(ruleTwoMock)
+    const ruleTwoMock = jest.fn().mockResolvedValue(true);
+    const ruleTwo = rule({ cache: 'contextual' })(ruleTwoMock);
 
     const permissions = shield({
       Query: {
@@ -169,9 +165,9 @@ describe('caching:', () => {
         d: ruleTwo,
         e: ruleTwo,
       },
-    })
+    });
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = applyMiddleware(schema, permissions);
 
     // Execution
     const query = `
@@ -182,8 +178,8 @@ describe('caching:', () => {
         d(arg: "bar")
         e
       }
-    `
-    const res = await graphql(schemaWithPermissions, query, undefined, {})
+    `;
+    const res = await graphql(schemaWithPermissions, query, undefined, {});
 
     /* Tests */
 
@@ -195,10 +191,10 @@ describe('caching:', () => {
         d: 'd',
         e: 'e',
       },
-    })
-    expect(ruleOneMock).toBeCalledTimes(1)
-    expect(ruleTwoMock).toBeCalledTimes(1)
-  })
+    });
+    expect(ruleOneMock).toBeCalledTimes(1);
+    expect(ruleTwoMock).toBeCalledTimes(1);
+  });
 
   test('No Cache - rule is reexecuted every time.', async () => {
     /* Schema */
@@ -211,7 +207,7 @@ describe('caching:', () => {
         d(arg: String): String!
         e(arg: String): String!
       }
-    `
+    `;
     const resolvers = {
       Query: {
         a: () => 'a',
@@ -220,23 +216,23 @@ describe('caching:', () => {
         d: () => 'd',
         e: () => 'e',
       },
-    }
+    };
 
     const schema = makeExecutableSchema({
       typeDefs,
       resolvers,
-    })
+    });
 
     /* Permissions */
 
-    const allowMock = jest.fn().mockResolvedValue(true)
-    const allow = rule({ cache: 'no_cache' })(allowMock)
+    const allowMock = jest.fn().mockResolvedValue(true);
+    const allow = rule({ cache: 'no_cache' })(allowMock);
 
     const permissions = shield({
       Query: allow,
-    })
+    });
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = applyMiddleware(schema, permissions);
 
     /* Execution */
 
@@ -248,8 +244,8 @@ describe('caching:', () => {
         d(arg: "bar")
         e
       }
-    `
-    const res = await graphql(schemaWithPermissions, query, undefined, {})
+    `;
+    const res = await graphql(schemaWithPermissions, query, undefined, {});
 
     /* Tests */
 
@@ -261,9 +257,9 @@ describe('caching:', () => {
         d: 'd',
         e: 'e',
       },
-    })
-    expect(allowMock).toBeCalledTimes(5)
-  })
+    });
+    expect(allowMock).toBeCalledTimes(5);
+  });
 
   test('Custom cache key function - Rule is called based on custom cache key', async () => {
     /* Schema */
@@ -272,32 +268,32 @@ describe('caching:', () => {
         a(arg: String): String!
         b(arg: String): String!
       }
-    `
+    `;
     const resolvers = {
       Query: {
         a: () => 'a',
         b: () => 'b',
       },
-    }
+    };
 
     const schema = makeExecutableSchema({
       typeDefs,
       resolvers,
-    })
+    });
 
     /* Tests */
 
-    const allowMock = jest.fn().mockResolvedValue(true)
+    const allowMock = jest.fn().mockResolvedValue(true);
 
     const permissions = shield({
       Query: rule({
         cache: (parent, args, ctx, info) => {
-          return JSON.stringify(args)
+          return JSON.stringify(args);
         },
       })(allowMock),
-    })
+    });
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = applyMiddleware(schema, permissions);
 
     /* Execution */
 
@@ -308,8 +304,8 @@ describe('caching:', () => {
         a2: a(arg: "foo")
         a3: a(arg: "boo")
       }
-    `
-    const res = await graphql(schemaWithPermissions, query, undefined, {})
+    `;
+    const res = await graphql(schemaWithPermissions, query, undefined, {});
 
     /* Tests */
 
@@ -320,10 +316,10 @@ describe('caching:', () => {
         a2: 'a',
         a3: 'a',
       },
-    })
-    expect(allowMock).toBeCalledTimes(3)
-  })
-})
+    });
+    expect(allowMock).toBeCalledTimes(3);
+  });
+});
 
 test('Customize hash function', async () => {
   /* Schema */
@@ -332,24 +328,24 @@ test('Customize hash function', async () => {
         a(arg: String): String!
         b(arg: String): String!
       }
-    `
+    `;
   const resolvers = {
     Query: {
       a: () => 'a',
       b: () => 'b',
     },
-  }
+  };
 
   const schema = makeExecutableSchema({
     typeDefs,
     resolvers,
-  })
+  });
 
   /* Tests */
 
-  const allowMock = jest.fn().mockResolvedValue(true)
+  const allowMock = jest.fn().mockResolvedValue(true);
 
-  const hashFunction: IHashFunction = jest.fn((opts) => JSON.stringify(opts))
+  const hashFunction: IHashFunction = jest.fn((opts) => JSON.stringify(opts));
 
   const permissions = shield(
     {
@@ -358,9 +354,9 @@ test('Customize hash function', async () => {
     {
       hashFunction,
     },
-  )
+  );
 
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
+  const schemaWithPermissions = applyMiddleware(schema, permissions);
 
   /* Execution */
 
@@ -369,8 +365,8 @@ test('Customize hash function', async () => {
         a(arg: "foo")
         b(arg: "bar")
       }
-    `
-  const res = await graphql(schemaWithPermissions, query, undefined, {})
+    `;
+  const res = await graphql(schemaWithPermissions, query, undefined, {});
 
   /* Tests */
 
@@ -379,18 +375,18 @@ test('Customize hash function', async () => {
       a: 'a',
       b: 'b',
     },
-  })
-  expect(allowMock).toBeCalledTimes(2)
-  expect(hashFunction).toHaveBeenCalledTimes(2)
+  });
+  expect(allowMock).toBeCalledTimes(2);
+  expect(hashFunction).toHaveBeenCalledTimes(2);
   expect(hashFunction).toHaveBeenCalledWith({
     parent: undefined,
     args: { arg: 'foo' },
-  })
+  });
   expect(hashFunction).toHaveBeenCalledWith({
     parent: undefined,
     args: { arg: 'bar' },
-  })
-})
+  });
+});
 
 describe('legacy cache:', () => {
   test('Strict cache - Rule is called multiple times, based on different parent.', async () => {
@@ -400,34 +396,30 @@ describe('legacy cache:', () => {
       type Query {
         test: [Test!]!
       }
-  
+
       type Test {
         value: String!
       }
-    `
+    `;
     const resolvers = {
       Query: {
-        test: () => [
-          { value: 'pass-A' },
-          { value: 'pass-A' },
-          { value: 'pass-B' },
-        ],
+        test: () => [{ value: 'pass-A' }, { value: 'pass-A' }, { value: 'pass-B' }],
       },
-    }
+    };
 
     const schema = makeExecutableSchema({
       typeDefs,
       resolvers,
-    })
+    });
 
     /* Permissions */
 
-    const allowMock = jest.fn().mockResolvedValue(true)
+    const allowMock = jest.fn().mockResolvedValue(true);
     const permissions = shield({
       Test: rule({ cache: true })(allowMock),
-    })
+    });
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = applyMiddleware(schema, permissions);
 
     /* Execution */
 
@@ -437,8 +429,8 @@ describe('legacy cache:', () => {
           value
         }
       }
-    `
-    const res = await graphql(schemaWithPermissions, query, undefined, {})
+    `;
+    const res = await graphql(schemaWithPermissions, query, undefined, {});
 
     /* Tests */
 
@@ -446,9 +438,9 @@ describe('legacy cache:', () => {
       data: {
         test: [{ value: 'pass-A' }, { value: 'pass-A' }, { value: 'pass-B' }],
       },
-    })
-    expect(allowMock).toBeCalledTimes(2)
-  })
+    });
+    expect(allowMock).toBeCalledTimes(2);
+  });
 
   test('No Cache - rule is reexecuted every time.', async () => {
     /* Schema */
@@ -461,7 +453,7 @@ describe('legacy cache:', () => {
         d(arg: String): String!
         e(arg: String): String!
       }
-    `
+    `;
     const resolvers = {
       Query: {
         a: () => 'a',
@@ -470,22 +462,22 @@ describe('legacy cache:', () => {
         d: () => 'd',
         e: () => 'e',
       },
-    }
+    };
 
     const schema = makeExecutableSchema({
       typeDefs,
       resolvers,
-    })
+    });
 
     /* Permissions */
-    const allowMock = jest.fn().mockResolvedValue(true)
-    const allow = rule({ cache: false })(allowMock)
+    const allowMock = jest.fn().mockResolvedValue(true);
+    const allow = rule({ cache: false })(allowMock);
 
     const permissions = shield({
       Query: allow,
-    })
+    });
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = applyMiddleware(schema, permissions);
 
     // Execution
     const query = `
@@ -496,8 +488,8 @@ describe('legacy cache:', () => {
         d(arg: "bar")
         e
       }
-    `
-    const res = await graphql(schemaWithPermissions, query, undefined, {})
+    `;
+    const res = await graphql(schemaWithPermissions, query, undefined, {});
 
     expect(res).toEqual({
       data: {
@@ -507,7 +499,7 @@ describe('legacy cache:', () => {
         d: 'd',
         e: 'e',
       },
-    })
-    expect(allowMock).toBeCalledTimes(5)
-  })
-})
+    });
+    expect(allowMock).toBeCalledTimes(5);
+  });
+});
