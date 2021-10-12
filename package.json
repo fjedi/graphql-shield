@@ -24,7 +24,7 @@
   "dependencies": {
     "@types/yup": "0.29.13",
     "object-hash": "^2.0.3",
-    "yup": "0.32.10"
+    "yup": "0.32.11"
   },
   "devDependencies": {
     "@graphql-tools/schema": "8.2.0",
