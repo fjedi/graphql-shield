@@ -27,7 +27,7 @@
     "yup": "0.32.11"
   },
   "devDependencies": {
-    "@graphql-tools/schema": "8.3.0",
+    "@graphql-tools/schema": "8.3.1",
     "@types/expect": "24.3.0",
     "@types/jest": "27.0.2",
     "@types/node": "14.17.32",
