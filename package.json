@@ -44,7 +44,7 @@
     "graphql": "15.7.2",
     "graphql-middleware": "6.1.12",
     "husky": "7.0.4",
-    "jest": "27.4.0",
+    "jest": "27.4.1",
     "lint-staged": "11.2.6",
     "prettier": "2.5.0",
     "request-promise-native": "1.0.9",
