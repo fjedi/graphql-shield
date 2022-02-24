@@ -42,7 +42,7 @@
     "eslint-plugin-import": "2.25.4",
     "eslint-plugin-prettier": "4.0.0",
     "graphql": "15.8.0",
-    "graphql-middleware": "6.1.14",
+    "graphql-middleware": "6.1.15",
     "husky": "7.0.4",
     "jest": "27.5.1",
     "lint-staged": "11.2.6",
@@ -54,7 +54,7 @@
   },
   "peerDependencies": {
     "graphql": "^14.0.0 || ^15.0.0",
-    "graphql-middleware": "6.1.14"
+    "graphql-middleware": "6.1.15"
   },
   "license": "MIT",
   "lint-staged": {
