@@ -46,7 +46,7 @@
     "husky": "7.0.4",
     "jest": "27.5.1",
     "lint-staged": "11.2.6",
-    "prettier": "2.5.1",
+    "prettier": "2.6.2",
     "request-promise-native": "1.0.9",
     "rimraf": "3.0.2",
     "ts-jest": "27.1.4",
