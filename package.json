@@ -22,7 +22,7 @@
     "url": "https://github.com/fjedi/graphql-shield.git"
   },
   "dependencies": {
-    "@types/yup": "0.29.13",
+    "@types/yup": "0.29.14",
     "object-hash": "^2.0.3",
     "yup": "0.32.11"
   },
