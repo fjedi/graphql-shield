@@ -48,7 +48,7 @@
     "lint-staged": "13.1.0",
     "prettier": "2.8.2",
     "request-promise-native": "1.0.9",
-    "rimraf": "3.0.2",
+    "rimraf": "4.4.1",
     "ts-jest": "28.0.8",
     "typescript": "4.9.4"
   },
