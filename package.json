@@ -32,7 +32,7 @@
     "@types/jest": "28.1.8",
     "@types/node": "17.0.45",
     "@types/object-hash": "2.2.1",
-    "@types/request-promise-native": "1.0.19",
+    "@types/request-promise-native": "1.0.20",
     "@typescript-eslint/eslint-plugin": "5.62.0",
     "@typescript-eslint/parser": "5.62.0",
     "apollo-server": "2.26.2",
