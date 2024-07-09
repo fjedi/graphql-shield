@@ -41,7 +41,7 @@
     "eslint-config-prettier": "8.10.0",
     "eslint-plugin-import": "2.29.1",
     "eslint-plugin-prettier": "4.2.1",
-    "graphql": "15.8.0",
+    "graphql": "15.9.0",
     "graphql-middleware": "6.1.35",
     "husky": "8.0.3",
     "jest": "28.1.3",
