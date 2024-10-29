@@ -35,7 +35,7 @@
     "@types/request-promise-native": "1.0.21",
     "@typescript-eslint/eslint-plugin": "5.62.0",
     "@typescript-eslint/parser": "5.62.0",
-    "apollo-server": "2.26.2",
+    "apollo-server": "3.13.0",
     "eslint": "8.57.1",
     "eslint-config-airbnb-typescript": "17.1.0",
     "eslint-config-prettier": "8.10.0",
